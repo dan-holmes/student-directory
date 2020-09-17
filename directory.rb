@@ -6,20 +6,18 @@ def puts_center(text)
 end
 
 def input_students
-  puts "Enter students one by one, followed by their country of origin and cohort"
-  puts "Enter an empty line when you're done"
-  while true do
-    input = STDIN.gets.delete("\n") # Modified from gets.chomp to satisfy excercise 10
-    break if input.empty?
-    name = input
-    puts "Enter country:"
+  loop do
+    puts "Enter a student's name:"
+    puts "Enter an empty line when you're done"
+    name = STDIN.gets.chomp
+    break if name.empty?
+    puts "Enter their country:"
     country = STDIN.gets.chomp
-    puts "Enter cohort:"
+    puts "Enter their cohort (if you know it):"
     cohort = STDIN.gets.chomp
-    cohort = "November" if cohort.empty?
-    cohort = cohort.to_sym
-    @students << ({name: input, cohort: cohort, country: country})
-    puts "Now we have #{@students.count} students"
+    student_details = "#{name},#{country},#{cohort}"
+    add_student(student_details)
+    puts "Now we have #{@students.count} students."
   end
 end
 
@@ -115,11 +113,16 @@ def save_students
   file.close
 end
 
+def add_student(line)
+  name, country, cohort = line.chomp.split(",")
+  cohort = "November" if cohort.nil?
+  @students << {name: name, country: country, cohort: cohort.to_sym}
+end
+
 def load_students(filename = "students.csv")
   file = File.open(filename, "r")
   file.readlines.each do |line|
-    name, country, cohort = line.chomp.split(",")
-    @students << {name: name, country: country, cohort: cohort.to_sym}
+    add_student(line)
   end
   file.close
 end
