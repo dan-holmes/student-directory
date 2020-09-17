@@ -109,13 +109,13 @@ def interactive_menu
 end
 
 def save_students(filename = @default_load_file)
-  file = File.open(filename, "w")
-  @students.each do |student|
-    student_data = [student[:name], student[:country], student[:cohort]]
-    csv_line = student_data.join(",")
-    file.puts csv_line
-  end
-  file.close
+  File.open(filename, "w") { |file|
+    @students.each do |student|
+      student_data = [student[:name], student[:country], student[:cohort]]
+      csv_line = student_data.join(",")
+      file.puts csv_line
+    end
+  }
   puts "Saved #{@students.count} to #{@default_load_file}"
 end
 
@@ -126,12 +126,13 @@ def add_student(line)
 end
 
 def load_students(filename = @default_load_file)
-  file = File.open(filename, "r")
-  file.readlines.each do |line|
-    add_student(line)
-  end
-  file.close
-  puts "Loaded #{@students.count} from #{filename}"
+  File.open(filename, "r") { |file|
+    file.readlines.each do |line|
+      add_student(line)
+    end
+    file.close
+    puts "Loaded #{@students.count} from #{filename}"
+  }
 end
 
 def get_load_file
