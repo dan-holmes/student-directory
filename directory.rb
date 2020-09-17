@@ -28,10 +28,19 @@ def print_header
 end
 
 def print(students)
-  students.each_with_index do |student, index|
-    list_number = index + 1
-    puts_center("#{list_number}. #{student[:name]} from #{student[:country]} (#{student[:cohort]} cohort)")
-  end
+  cohorts = get_cohorts(students)
+  cohorts.each { |cohort|
+    puts_center "#{cohort} cohort:"
+    students.each { |student|
+      if student[:cohort] == cohort
+        puts_center("#{student[:name]} from #{student[:country]}")
+      end
+    }
+  }
+end
+
+def get_cohorts(students)
+  return students.map {|student| student[:cohort]}.uniq
 end
 
 def filter_by_letter(students, letter)
@@ -57,5 +66,5 @@ end
 
 students = input_students
 print_header
-print(filter_less_than_12(filter_by_letter(students,'D')))
+print(students)
 print_footer(students)
