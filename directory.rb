@@ -8,7 +8,7 @@ def input_students
   puts "Enter an empty line when you're done"
   students = []
   while true do
-    input = gets.chomp
+    input = gets.delete("\n") # Modified from gets.chomp to satisfy excercise 10
     return students if input.empty?
     name = input
     puts "Enter country:"
