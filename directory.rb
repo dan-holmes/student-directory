@@ -5,7 +5,7 @@ def input_students
   while true do
     input = gets.chomp
     return students if input.empty?
-    students.push({name: input, cohort: :november})
+    students << ({name: input, cohort: :november})
     puts "Now we have #{students.count} students"
   end
 end
@@ -16,8 +16,9 @@ def print_header
 end
 
 def print(students)
-  students.each do |student|
-    puts "#{student[:name]} (#{student[:cohort]} cohort)"
+  students.each_with_index do |student, index|
+    list_number = index + 1
+    puts "#{list_number}. #{student[:name]} (#{student[:cohort]} cohort)"
   end
 end
 
