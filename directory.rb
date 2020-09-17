@@ -28,6 +28,7 @@ def print_header
 end
 
 def print(students)
+  return if students.count == 0 # Do not try and print the list if it's empty
   cohorts = get_cohorts(students)
   cohorts.each { |cohort|
     puts_center "#{cohort} cohort:"
@@ -61,11 +62,11 @@ end
 
 def print_footer(students)
   puts ""
-  students.count > 1 ? plural_modifier = "s" : plural_modifier = ""
+  students.count == 1 ? plural_modifier = "" : plural_modifier = "s"
   puts_center("Overall we have #{students.count} great student#{plural_modifier}")
 end
 
-students = input_students
-print_header
+students = input_students()
+print_header()
 print(students)
 print_footer(students)
