@@ -1,4 +1,5 @@
 @students = []
+@default_load_file = "students.csv"
 
 def puts_center(text)
   page_width = 80
@@ -30,14 +31,18 @@ def print_students
   return if @students.count == 0 # Do not try and print the list if it's empty
   cohorts = get_cohorts
   cohorts.each { |cohort|
-    puts_center "#{cohort} cohort:"
-    @students.each { |student|
-      if student[:cohort] == cohort
-        puts_center("#{student[:name]} | #{student[:country]}")
-      end
+      puts_center "#{cohort} cohort:"
+      print_students_in(cohort)
     }
     puts ""
   }
+end
+
+def print_students_in(cohort)
+  @students.each { |student|
+    if student[:cohort] == cohort
+      puts_center("#{student[:name]} | #{student[:country]}")
+    end
 end
 
 def get_cohorts
@@ -119,7 +124,7 @@ def add_student(line)
   @students << {name: name, country: country, cohort: cohort.to_sym}
 end
 
-def load_students(filename = "students.csv")
+def load_students(filename = @default_load_file)
   file = File.open(filename, "r")
   file.readlines.each do |line|
     add_student(line)
@@ -127,9 +132,15 @@ def load_students(filename = "students.csv")
   file.close
 end
 
-def try_load_students
-  filename = ARGV.first
-  return if filename.nil?
+def get_load_file
+  if !ARGV.first.nil?
+    filename = ARGV.first
+  else
+    filename = @default_load_file
+  end
+end
+
+def try_loading_from(filename)
   if File.exists?(filename)
     load_students(filename)
     puts "Loaded #{@students.count} from #{filename}"
@@ -137,6 +148,11 @@ def try_load_students
     puts "Sorry, #{filename} doesn't exist"
     exit
   end
+end
+
+def try_load_students
+  filename = get_load_file
+  try_loading_from(filename)
 end
 
 try_load_students
