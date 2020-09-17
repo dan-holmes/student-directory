@@ -1,3 +1,5 @@
+require 'csv'
+
 @students = []
 @default_load_file = "students.csv"
 
@@ -16,7 +18,7 @@ def input_students
     country = STDIN.gets.chomp
     puts "Enter their cohort (if you know it):"
     cohort = STDIN.gets.chomp
-    student_details = "#{name},#{country},#{cohort}"
+    student_details = [name,country,cohort]
     add_student(student_details)
     puts "Now we have #{@students.count} students."
   end
@@ -109,30 +111,25 @@ def interactive_menu
 end
 
 def save_students(filename = @default_load_file)
-  File.open(filename, "w") { |file|
+  CSV.open(filename, "wb") do |csv|
     @students.each do |student|
-      student_data = [student[:name], student[:country], student[:cohort]]
-      csv_line = student_data.join(",")
-      file.puts csv_line
+      csv << [student[:name], student[:country], student[:cohort]]
     end
-  }
-  puts "Saved #{@students.count} to #{@default_load_file}"
+  end
+  puts "Saved #{@students.count} to #{filename}"
 end
 
-def add_student(line)
-  name, country, cohort = line.chomp.split(",")
+def add_student(student_details)
+  name, country, cohort = student_details
   cohort = "November" if cohort.nil?
   @students << {name: name, country: country, cohort: cohort.to_sym}
 end
 
 def load_students(filename = @default_load_file)
-  File.open(filename, "r") { |file|
-    file.readlines.each do |line|
+  CSV.foreach(filename, "r") do |line|
       add_student(line)
-    end
-    file.close
-    puts "Loaded #{@students.count} from #{filename}"
-  }
+  end
+  puts "Loaded #{@students.count} from #{filename}"
 end
 
 def get_load_file
