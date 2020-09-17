@@ -4,7 +4,7 @@ def puts_center(text)
 end
 
 def input_students
-  puts "Enter students one by one, followed by their country of origin"
+  puts "Enter students one by one, followed by their country of origin and cohort"
   puts "Enter an empty line when you're done"
   students = []
   while true do
@@ -13,7 +13,11 @@ def input_students
     name = input
     puts "Enter country:"
     country = gets.chomp
-    students << ({name: input, cohort: :november, country: country})
+    puts "Enter cohort:"
+    cohort = gets.chomp
+    cohort = "November" if cohort.empty?
+    cohort = cohort.to_sym
+    students << ({name: input, cohort: cohort, country: country})
     puts "Now we have #{students.count} students"
   end
 end
