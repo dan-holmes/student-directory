@@ -35,7 +35,6 @@ def print_students
       print_students_in(cohort)
     }
     puts ""
-  }
 end
 
 def print_students_in(cohort)
@@ -43,6 +42,7 @@ def print_students_in(cohort)
     if student[:cohort] == cohort
       puts_center("#{student[:name]} | #{student[:country]}")
     end
+  }
 end
 
 def get_cohorts
@@ -109,13 +109,14 @@ def interactive_menu
 end
 
 def save_students
-  file = File.open("students.csv", "w")
+  file = File.open(@default_load_file, "w")
   @students.each do |student|
     student_data = [student[:name], student[:country], student[:cohort]]
     csv_line = student_data.join(",")
     file.puts csv_line
   end
   file.close
+  puts "Saved #{@students.count} to #{@default_load_file}"
 end
 
 def add_student(line)
@@ -130,6 +131,7 @@ def load_students(filename = @default_load_file)
     add_student(line)
   end
   file.close
+  puts "Loaded #{@students.count} from #{filename}"
 end
 
 def get_load_file
@@ -143,7 +145,6 @@ end
 def try_loading_from(filename)
   if File.exists?(filename)
     load_students(filename)
-    puts "Loaded #{@students.count} from #{filename}"
   else
     puts "Sorry, #{filename} doesn't exist"
     exit
