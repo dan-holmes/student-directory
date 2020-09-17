@@ -9,13 +9,13 @@ def input_students
   puts "Enter students one by one, followed by their country of origin and cohort"
   puts "Enter an empty line when you're done"
   while true do
-    input = gets.delete("\n") # Modified from gets.chomp to satisfy excercise 10
+    input = STDIN.gets.delete("\n") # Modified from gets.chomp to satisfy excercise 10
     break if input.empty?
     name = input
     puts "Enter country:"
-    country = gets.chomp
+    country = STDIN.gets.chomp
     puts "Enter cohort:"
-    cohort = gets.chomp
+    cohort = STDIN.gets.chomp
     cohort = "November" if cohort.empty?
     cohort = cohort.to_sym
     @students << ({name: input, cohort: cohort, country: country})
@@ -101,7 +101,7 @@ end
 def interactive_menu
   loop do
     print_menu
-    process(gets.chomp)
+    process(STDIN.gets.chomp)
   end
 end
 
@@ -115,8 +115,8 @@ def save_students
   file.close
 end
 
-def load_students
-  file = File.open("students.csv", "r")
+def load_students(filename = "students.csv")
+  file = File.open(filename, "r")
   file.readlines.each do |line|
     name, country, cohort = line.chomp.split(",")
     @students << {name: name, country: country, cohort: cohort.to_sym}
@@ -124,4 +124,17 @@ def load_students
   file.close
 end
 
+def try_load_students
+  filename = ARGV.first
+  return if filename.nil?
+  if File.exists?(filename)
+    load_students(filename)
+    puts "Loaded #{@students.count} from #{filename}"
+  else
+    puts "Sorry, #{filename} doesn't exist"
+    exit
+  end
+end
+
+try_load_students
 interactive_menu
