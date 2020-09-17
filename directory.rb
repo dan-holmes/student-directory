@@ -61,11 +61,7 @@ end
 
 def print_footer(students)
   puts ""
-  if students.count > 1
-    plural_modifier = "s"
-  else
-    plural_modifier = ""
-  end
+  students.count > 1 ? plural_modifier = "s" : plural_modifier = ""
   puts_center("Overall we have #{students.count} great student#{plural_modifier}")
 end
 
